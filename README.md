@@ -62,19 +62,19 @@ python da_home.py --dset office-home --lr 0.01 --net resnet50 --gpu_id 0 --batch
 ```
 For CDAN:
 ```
-python da_visda.py --dset visda --lr 0.01 --net resnet101 --gpu_id 0 --batch_size 36 --base CDAN --method Blank --interval 2 --lr_decay2 0.1
+python da_home.py --dset office-home --lr 0.01 --net resnet101 --gpu_id 0 --batch_size 36 --base CDAN --method Blank --interval 2 --lr_decay2 0.1
 ```
 For CDAN + LECO:
 ```
-python da_visda.py --dset visda --lr 0.01 --net resnet101 --gpu_id 0 --batch_size 36 --base CDAN --method LECO --interval 2 --warm_up 3000 --lamda 2 --lr_decay2 0.1
+python da_home.py --dset office-home --lr 0.01 --net resnet101 --gpu_id 0 --batch_size 36 --base CDAN --method LECO --interval 2 --warm_up 3000 --lamda 2 --lr_decay2 0.1
 ```
 For BNM
 ```
-python da_visda.py --dset visda --lr 0.01 --net resnet101 --gpu_id 0 --batch_size 36 --base BNM --method Blank --interval 2
+python da_home.py --dset office-home --lr 0.01 --net resnet101 --gpu_id 0 --batch_size 36 --base BNM --method Blank --interval 2
 ```
 For BNM + LECO
 ```
-python da_visda.py --dset visda --lr 0.01 --net resnet101 --gpu_id 0 --batch_size 36 --base BNM --method LECO --interval 2 --lambda 3
+python da_home.py --dset office-home --lr 0.01 --net resnet101 --gpu_id 0 --batch_size 36 --base BNM --method LECO --interval 2 --lambda 3
 ```
 
 
