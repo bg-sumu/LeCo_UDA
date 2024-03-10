@@ -67,7 +67,8 @@ def cal_acc(loader, netG, netB, netC, flag=False):
     with torch.no_grad():
         iter_test = iter(loader)
         for i in range(len(loader)):
-            data = iter_test.next()
+            # data = iter_test.next()
+            data = next(iter_test)
             inputs = data[0]
             labels = data[1]
             inputs = inputs.cuda()
@@ -146,7 +147,7 @@ def train_target(args):
     optimizer_f = op_copy(optimizer_f)
 
 
-    print('----------------------------------------------------------------\n')
+    print('----------------------------------------------------------------/n')
     # max_iter = args.max_epoch * len(dset_loaders["target_unl"])
     max_iter = args.max_it
     interval_iter = max_iter // args.interval
@@ -161,20 +162,24 @@ def train_target(args):
         netG = nn.DataParallel(netG)
         netB = nn.DataParallel(netB)
         netC = nn.DataParallel(netC)
-    
+
+    # Initialize iterators
+    iter_sour = iter(dset_loaders["source"])
+    iter_target = iter(dset_loaders["target"])
+
     while iter_num < max_iter:
         #source
         try:
-            inputs_s, label_s, _ = iter_sour.next()
+            inputs_s, label_s, _ = next(iter_sour)
         except:
             iter_sour = iter(dset_loaders["source"])
-            inputs_s, label_s, _= iter_sour.next()
+            inputs_s, label_s, _= next(iter_sour)
         #target
         try:
-            (inputs_w, inputs_st), label_t, idx_t = iter_target.next()
+            (inputs_w, inputs_st), label_t, idx_t = next(iter_target)
         except:
             iter_target = iter(dset_loaders["target"])
-            (inputs_w, inputs_st), label_t, idx_t = iter_target.next()
+            (inputs_w, inputs_st), label_t, idx_t = next(iter_target)
 
         netG.train()
         netB.train()
@@ -256,14 +261,14 @@ def train_target(args):
             netC.eval()
             if args.dset=='visda':
                 acc_s_te, acc_list = cal_acc(dset_loaders['test'], netG, netB, netC, True)
-                log_str = 'Task: {}, Iter:{}/{}; Accuracy = {:.2f}%'.format(args.name, iter_num, max_iter, acc_s_te) + '\n' + acc_list
+                log_str = 'Task: {}, Iter:{}/{}; Accuracy = {:.2f}%'.format(args.name, iter_num, max_iter, acc_s_te) + '/n' + acc_list
             else:
                 acc_s_te = cal_acc(dset_loaders['test'], netG, netB, netC, False)
                 log_str = 'Task: {}, Iter:{}/{}; Accuracy = {:.2f}%'.format(args.name, iter_num, max_iter, acc_s_te)
 
-            args.out_file.write(log_str + '\n')
+            args.out_file.write(log_str + '/n')
             args.out_file.flush()
-            print(log_str+'\n')
+            print(log_str+'/n')
             netG.train()
             netB.train()
             netC.train()
@@ -274,9 +279,9 @@ def train_target(args):
         torch.save(netC.state_dict(), osp.join(args.output_dir, "target_C_" + args.savename + ".pt"))
 
 def print_args(args):
-    s = "==========================================\n"
+    s = "==========================================/n"
     for arg, content in args.__dict__.items():
-        s += "{}:{}\n".format(arg, content)
+        s += "{}:{}/n".format(arg, content)
     return s
 
 def check_badcase(args):
@@ -302,7 +307,7 @@ def check_badcase(args):
     t_pth_pseu = savedir + '_pred.txt'
     f_tgt = open(t_pth_pseu,'w')
     for idx,item in enumerate(pseudo_list):
-        f_tgt.write(str(item)+' '+str(int(all_label[idx]))+'\n')
+        f_tgt.write(str(item)+' '+str(int(all_label[idx]))+'/n')
     f_tgt.close()
     return acc
 
@@ -344,9 +349,9 @@ if __name__ == "__main__":
     print(args.net)
     print('---------------------------------------------------------')
     if args.dset == 'office-home':
-        names = ['Art', 'Clipart', 'Product', 'Real']
+        names = ['Art', 'Clipart', 'Product', 'Real World']
         args.class_num = 65
-        args.root = '/home/21/DAlib/dsets/office-home/images'
+        args.root = 'C:/Users/SumukhaBG/Documents/ACCV/data/OfficeHome'
     elif args.dset == 'office':
         names = ['amazon', 'dslr', 'webcam']
         args.class_num = 31
@@ -358,7 +363,7 @@ if __name__ == "__main__":
     elif args.dset == 'visda':
         names = ['train', 'validation']
         args.class_num = 12
-        args.root = '/data1/junbao3/MM/xdwang/data/visda'
+        args.root = 'C:/Users/SumukhaBG/Documents/ACCV/data/Visda_c'
     elif args.dset == 'clef':
         names = ['i', 'p', 'c']
         args.class_num = 12
@@ -404,6 +409,6 @@ if __name__ == "__main__":
             args.savename = f'{args.base}_{args.method}_{args.lamda}_{args.seed}_'
             args.out_file = open(osp.join(args.output_dir, 'log_' + args.savename + '.txt'), 'w')
 
-            args.out_file.write(print_args(args)+'\n')
+            args.out_file.write(print_args(args)+'/n')
             args.out_file.flush()
             train_target(args)

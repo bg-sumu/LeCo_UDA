@@ -67,7 +67,7 @@ def cal_acc(loader, netG, netB, netC, flag=False):
     with torch.no_grad():
         iter_test = iter(loader)
         for i in range(len(loader)):
-            data = iter_test.next()
+            data = next(iter_test)
             inputs = data[0]
             labels = data[1]
             inputs = inputs.cuda()
@@ -165,16 +165,16 @@ def train_target(args):
     while iter_num < max_iter:
         #source
         try:
-            inputs_s, label_s, _ = iter_sour.next()
+            inputs_s, label_s, _ = next(iter_sour)
         except:
             iter_sour = iter(dset_loaders["source"])
-            inputs_s, label_s, _= iter_sour.next()
+            inputs_s, label_s, _= next(iter_sour)
         #target
         try:
-            (inputs_w, inputs_st), label_t, idx_t = iter_target.next()
+            (inputs_w, inputs_st), label_t, idx_t = next(iter_target)
         except:
             iter_target = iter(dset_loaders["target"])
-            (inputs_w, inputs_st), label_t, idx_t = iter_target.next()
+            (inputs_w, inputs_st), label_t, idx_t = next(iter_target)
 
         netG.train()
         netB.train()
@@ -348,7 +348,7 @@ if __name__ == "__main__":
     if args.dset == 'office-home':
         names = ['Art', 'Clipart', 'Product', 'Real']
         args.class_num = 65
-        args.root = '/data1/junbao3/MM/xdwang/data/office-home/images'
+        args.root = 'C:/Users/SumukhaBG/Documents/ACCV/data/OfficeHome'
     elif args.dset == 'office':
         names = ['amazon', 'dslr', 'webcam']
         args.class_num = 31

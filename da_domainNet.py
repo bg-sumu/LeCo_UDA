@@ -347,7 +347,7 @@ if __name__ == "__main__":
     if args.dset == 'office-home':
         names = ['Art', 'Clipart', 'Product', 'Real']
         args.class_num = 65
-        args.root = '/home/21/DAlib/dsets/office-home/images'
+        args.root = 'C:/Users/SumukhaBG/Documents/ACCV/data/OfficeHome'
     elif args.dset == 'office':
         names = ['amazon', 'dslr', 'webcam']
         args.class_num = 31

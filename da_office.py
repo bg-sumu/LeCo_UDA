@@ -26,7 +26,7 @@ def image_classification_test(loader, model, test_10crop=True):
         if test_10crop:
             iter_test = [iter(loader['test'][i]) for i in range(10)]
             for i in range(len(loader['test'][0])):
-                data = [iter_test[j].next() for j in range(10)]
+                data = [next(iter_test[j]) for j in range(10)]
                 inputs = [data[j][0] for j in range(10)]
                 labels = data[0][1]
                 for j in range(10):
@@ -47,7 +47,7 @@ def image_classification_test(loader, model, test_10crop=True):
         else:
             iter_test = iter(loader["test"])
             for i in range(len(loader['test'])):
-                data = iter_test.next()
+                data = next(iter_test)
                 inputs = data[0]
                 labels = data[1]
                 inputs = inputs.cuda()
@@ -186,8 +186,8 @@ def train(config):
         if i % len_train_target == 0:
             iter_target = iter(dset_loaders["target"])
 
-        inputs_source, labels_source = iter_source.next()
-        (inputs_target, inputs_target_str), labels_target = iter_target.next()
+        inputs_source, labels_source = next(iter_source)
+        (inputs_target, inputs_target_str), labels_target = next(iter_target)
         inputs_source, inputs_target, labels_source = inputs_source.cuda(), inputs_target.cuda(), labels_source.cuda()
         inputs_target_str = inputs_target_str.cuda()
         if config['method']=='NO':
@@ -329,7 +329,7 @@ if __name__ == "__main__":
 
     config["dataset"] = args.dset
     args.folder = './data/txt/'
-    args.root = '/dsets/office'
+    args.root = 'C:/Users/SumukhaBG/Documents/ACCV/data/office_31'
     args.s_dset_path = args.folder + args.dset + '/' + 'labeled_source_images_'+args.s + '.txt'
     args.t_dset_path = args.folder + args.dset + '/' + 'labeled_source_images_'+args.t + '.txt'
     args.t_dset_path_unl = args.folder + args.dset + '/' + 'labeled_source_images_'+args.t +'.txt'
